@@ -1,0 +1,29 @@
+﻿@model HighSpeedRail.Models.CanibetUpdateModel
+@{
+    ViewBag.Title = "UpdateCanibet";
+}
+
+@using (Html.BeginForm("UpdateCanibet", "Canibet", FormMethod.Post))
+{
+    <h2>請選擇</h2>
+    <h3>櫃位：</h3>
+    foreach (var canibet in Model.CaniBets)
+    {
+        @Html.RadioButtonFor(m => m.SelectedCanibetID, canibet.ID) @canibet.ID
+    }
+    <h3>櫃位類別：</h3>
+    <input id="functiontype1" name="SelectedFunctionType" value="1" type="radio" /><label for="functiontype1">(1)當日票 />預售票</label>
+    <input id="functiontype2" name="SelectedFunctionType" value="2" type="radio" /><label for="functiontype2">(2)孕婦/年長/無障疑專用</label>
+    <input id="functiontype3" name="SelectedFunctionType" value="3" type="radio" /><label for="functiontype3">(3)商務車廂 / 升等</label>
+    <input id="functiontype4" name="SelectedFunctionType" value="4" type="radio" /><label for="functiontype4">(4)定期票/回數票</label>
+    <input id="functiontype5" name="SelectedFunctionType" value="5" type="radio" /><label for="functiontype5">(5)企業客戶</label>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Submit" />
+        </div>
+    </div>
+
+}
+

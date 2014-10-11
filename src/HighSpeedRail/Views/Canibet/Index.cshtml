@@ -1,0 +1,96 @@
+﻿@model HighSpeedRail.Models.CanibetIndexModel
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container body-content">
+        <div id="ct-page" class="shine">
+            <div data-bind="visible: isRest() == false">
+                <h3>櫃位：</h3><span data-bind="text: canibetID"></span>
+                <h3>櫃位類別：</h3><span data-bind="text: functionType"></span>
+            </div>
+            <div data-bind="visible: isRest()">
+                <h3>櫃位休息中....</h3>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/knockout")
+</body>
+</html>
+        @Scripts.Render("~/bundles/modernizr")
+        @Styles.Render("~/Content/css")
+
+        <script src="~/Bundles/signalR"></script>
+        <script src="~/signalr/hubs"></script>
+        <script>
+            var shineCount = 0;
+            var shine;
+
+            var viewModel = function () {
+
+                var self = this;
+
+                self.isUsing = ko.observable('@Model.isUsing' == 'True');
+                self.canibetID = ko.observable(@Model.CurrentCanibetID);
+                self.functionType = ko.observable('@Model.CurrentFunctionType');
+                self.isRest = ko.computed(function () {
+                    return self.isUsing() == false
+                });
+
+                // Reference the auto-generated proxy for the hub.
+                var canibet = $.connection.canibetHub;
+                // Create a function that the hub can call back to display messages.
+                canibet.client.broadcastMessage = function (result) {
+                    self.canibetID(result.CurrentCanibetID);
+                    self.functionType(result.CurrentFunctionType);
+                    self.isUsing(result.isUsing);
+
+                    shine = setInterval(flicker, 1000);
+                };
+
+                $.connection.hub.start().done(function () {
+
+
+                });
+            };
+
+
+            var ClickCounterViewModel = function () {
+                this.numberOfClicks = ko.observable(0);
+
+                this.registerClick = function () {
+                    this.numberOfClicks(this.numberOfClicks() + 1);
+                };
+
+                this.resetClicks = function () {
+                    this.numberOfClicks(0);
+                };
+
+                this.hasClickedTooManyTimes = ko.computed(function () {
+                    return this.numberOfClicks() >= 3;
+                }, this);
+            };
+
+            ko.applyBindings(new viewModel());
+
+            function flicker() {//閃爍函數
+                $('.shine').fadeOut(500).fadeIn(500);
+                shineCount += 1;
+                while (shineCount >= 10) {
+                    clearInterval(shine);
+                    shineCount = 0;
+                }
+            }
+        </script>
+    
