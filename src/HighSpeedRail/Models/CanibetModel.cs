@@ -1,24 +1,39 @@
-﻿using HighSpeedRail.Dto;
+﻿using HighSpeedRail.Entity;
 using HighSpeedRail.Enum;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace HighSpeedRail.Models
 {
     public class CanibetModel
     {
+        public long ID { get; set; }
+
+        public string FunctionType { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
+        public DateTime UPdateDate { get; set; }
+
+        public bool IsUse { get; set; }
 
     }
 
     public class CanibetUpdateModel
     {
-        public List<CanibetDto> CaniBets { get; set; }
+        public long ID { get; set; }
 
-        public FunctionTypeEnum SelectedFunctionType { get; set; }
+        public FunctionTypeEnum FunctionType { get; set; }
 
-        public int SelectedCanibetID { get; set; }
+        public DateTime CreateDate { get; set; }
+
+        public DateTime UPdateDate { get; set; }
+
+        public bool IsUse { get; set; }
+
+        public DetailTypeEnum DetailType { get; set; }
+
+        public string Announcement { get; set; }
     }
 
     public class CanibetCurrentModel

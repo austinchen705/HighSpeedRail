@@ -23,6 +23,11 @@ namespace HighSpeedRail.Controllers
 
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                _accountDao.Dispose();
+            }
+
             _accountDao.Dispose();
 
             base.Dispose(disposing);

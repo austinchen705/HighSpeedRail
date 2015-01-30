@@ -3,8 +3,64 @@
     ViewBag.Title = "Manage";
 }
 
-<h3>櫃位：</h3>@Model.SelectedCanibetID
-<h3>櫃位類別：</h3> @Model.SelectedFunctionType
+@*<h3>櫃位：</h3>@Model.SelectedCanibetID
+<h3>櫃位類別：</h3> @Model.SelectedFunctionType*@
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/knockout")
+@Scripts.Render("~/bundles/modernizr")
+@Styles.Render("~/Content/css")
 
-[@Html.ActionLink("Change", "UpdateCanibet")]
 
+<table data-toggle="table" width="300px">
+    <thead>
+        <tr>
+            <th>櫃位</th>
+            <th>目前類別</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: canibetList">
+        <tr>
+            <td data-bind ="text: id"></td>
+            <td data-bind="text: functionType"></td>
+            <td><a data-bind="click: $parent.redirectEditPage" style="cursor:pointer">Edit</a></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<script>
+    var viewModel = function ()
+    {
+        var self = this;
+        self.canibetList = ko.observableArray([]);
+
+        GetCaniBets();
+
+        function GetCaniBets() {
+            //Ajax Call Get All Employee Records
+            $.ajax({
+                type: "GET",
+                url: "/api/Canibet/GetAllCanibet",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    self.canibetList(data); //Put the response in ObservableArray
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+            //Ends Here
+        }
+
+        self.redirectEditPage = function(data) {
+            location.href = '/Canibet/UpdateCanibet/?ID=' + data.id;
+        }
+    }
+
+
+
+    ko.applyBindings(new viewModel());
+ </script>

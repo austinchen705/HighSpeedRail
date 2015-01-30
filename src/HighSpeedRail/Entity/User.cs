@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace HighSpeedRail.Dto
+namespace HighSpeedRail.Entity
 {
     [Table("User")]
-    public class UserDto
+    public class User
     {
         [Key]
         public long UserID { get; set; }

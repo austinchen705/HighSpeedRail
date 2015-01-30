@@ -12,6 +12,9 @@ using HighSpeedRail.Models;
 using HighSpeedRail.DAO;
 using HighSpeedRail.Util;
 using System.Web.Security;
+using HighSpeedRail.DBContext;
+using System.Data.Entity;
+using System.Threading;
 
 namespace HighSpeedRail.Controllers
 {
@@ -21,11 +24,16 @@ namespace HighSpeedRail.Controllers
         private ApplicationUserManager _userManager;
         private CanibetDAO _canibetDao = new CanibetDAO();
         private AccountDAO _accountDaO = new AccountDAO();
+        private HSRContext _hsrDb = new HSRContext();
 
         protected override void Dispose(bool disposing)
         {
-            _canibetDao.Dispose();
-            _accountDaO.Dispose();
+            if (disposing)
+            {
+                _canibetDao.Dispose();
+                _accountDaO.Dispose();
+                _hsrDb.Dispose();
+            }
 
             base.Dispose(disposing);
         }
@@ -90,7 +98,7 @@ namespace HighSpeedRail.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -100,8 +108,10 @@ namespace HighSpeedRail.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            var result = _accountDaO.Login(model.UserCode, Encryptor.CalculateMD5Hash(model.Password));
-            if (result)
+            //var result = _accountDaO.Login(model.UserCode, Encryptor.CalculateMD5Hash(model.Password));
+            var encryptPassword = Encryptor.CalculateMD5Hash(model.Password);
+            var result = await _hsrDb.Users.SingleOrDefaultAsync(c => c.UserCode == model.UserCode && c.Password == encryptPassword, cancellationToken);
+            if (result != null)
             {
                 FormsAuthentication.SetAuthCookie(model.UserCode, model.RememberMe);
                 return RedirectToLocal(returnUrl);

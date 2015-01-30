@@ -193,6 +193,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiExceptionAttribute.cs" />
+    <Compile Include="ApiExceptionLogger.cs" />
+    <Compile Include="ApiMessageHandler.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -233,15 +236,23 @@
     <Compile Include="Constants\Constant.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\CanibetController.cs" />
+    <Compile Include="Controllers\API\ClientController.cs" />
     <Compile Include="Controllers\CanibetController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeController.cs" />
     <Compile Include="DAO\AccountDAO.cs" />
     <Compile Include="DAO\CanibetDAO.cs" />
+    <Compile Include="DBContext\HSRContext.cs" />
     <Compile Include="DB\DBConn.cs" />
+    <Compile Include="Entity\Canibet.cs" />
+    <Compile Include="Entity\CanibetDetail.cs" />
     <Compile Include="Dto\UserDto.cs" />
     <Compile Include="Dto\CanibetDto.cs" />
+    <Compile Include="Entity\User.cs" />
+    <Compile Include="Enum\ClientActionEnum.cs" />
+    <Compile Include="Enum\DetailTypeEnum.cs" />
     <Compile Include="Enum\EnumExtension.cs" />
     <Compile Include="Enum\FunctionTypeEnum.cs" />
     <Compile Include="Global.asax.cs">
@@ -250,9 +261,11 @@
     <Compile Include="LocalizedDescriptionAttribute .cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CanibetModel.cs" />
+    <Compile Include="Models\ClientModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MeViewModels.cs" />
+    <Compile Include="Models\ShutdownModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -270,6 +283,7 @@
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\loading.gif" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -302,6 +316,7 @@
     <Content Include="Scripts\jquery.signalR-2.1.2.min.js" />
     <Content Include="Scripts\knockout-2.3.0.debug.js" />
     <Content Include="Scripts\knockout-2.3.0.js" />
+    <Content Include="Scripts\knockout-3.0.0.js" />
     <Content Include="Scripts\knockout.validation.debug.js" />
     <Content Include="Scripts\knockout.validation.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
@@ -352,6 +367,7 @@
     <Content Include="Views\Canibet\UpdateCanibet.cshtml" />
     <Content Include="Views\Canibet\Manage.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
+    <Content Include="Views\Client\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
