@@ -17,6 +17,70 @@
             <div data-bind="visible: isRest() == false">
                 <h3>櫃位：</h3><span data-bind="text: canibetID"></span>
                 <h3>櫃位類別：</h3><span data-bind="text: functionType"></span>
+                <div style="width:500px" data-bind="visible: detailType() === 'Announcement'">
+                    <marquee data-bind="text: announcement"></marquee>
+                </div>
+                <div style="width:500px" data-bind="visible: detailType() === 'Picture'">
+                    <div id="slideshow" data-bind="foreach: detailPictureList">
+                        <div>
+                            <img data-bind="attr: { src: '../UploadedFiles/' + canibetID + '/Picture/' + directory + '/' + fileName }" />
+                        </div>
+                    </div>
+                </div>
+                <div style="width:500px" data-bind="visible: detailType() === 'Video'">
+                    <div id="jp_container_1" class="jp-video jp-video-270p" role="application" aria-label="media player">
+                        <div class="jp-type-playlist">
+                            <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+                            <div class="jp-gui">
+                                <div class="jp-video-play">
+                                    <button class="jp-video-play-icon" role="button" tabindex="0">play</button>
+                                </div>
+                                <div class="jp-interface">
+                                    <div class="jp-progress">
+                                        <div class="jp-seek-bar">
+                                            <div class="jp-play-bar"></div>
+                                        </div>
+                                    </div>
+                                    <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+                                    <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+                                    <div class="jp-controls-holder">
+                                        <div class="jp-controls">
+                                            <button class="jp-previous" role="button" tabindex="0">previous</button>
+                                            <button class="jp-play" role="button" tabindex="0">play</button>
+                                            <button class="jp-next" role="button" tabindex="0">next</button>
+                                            <button class="jp-stop" role="button" tabindex="0">stop</button>
+                                        </div>
+                                        <div class="jp-volume-controls">
+                                            <button class="jp-mute" role="button" tabindex="0">mute</button>
+                                            <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+                                            <div class="jp-volume-bar">
+                                                <div class="jp-volume-bar-value"></div>
+                                            </div>
+                                        </div>
+                                        <div class="jp-toggles">
+                                            <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+                                            <button class="jp-shuffle" role="button" tabindex="0">shuffle</button>
+                                            <button class="jp-full-screen" role="button" tabindex="0">full screen</button>
+                                        </div>
+                                    </div>
+                                    <div class="jp-details">
+                                        <div class="jp-title" aria-label="title">&nbsp;</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="jp-playlist">
+                                <ul>
+                                    <!-- The method Playlist.displayPlaylist() uses this unordered list -->
+                                    <li>&nbsp;</li>
+                                </ul>
+                            </div>
+                            <div class="jp-no-solution">
+                                <span>Update Required</span>
+                                To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div data-bind="visible: isRest()">
                 <h3>櫃位休息中....</h3>
@@ -26,6 +90,8 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/knockout")
+    <script src="~/Scripts/jquery.jplayer.min.js"></script>
+    <script src="~/Scripts/jplayer.playlist.min.js"></script>
 </body>
 </html>
         @Scripts.Render("~/bundles/modernizr")
@@ -34,6 +100,33 @@
         <script src="~/Bundles/signalR"></script>
         <script src="~/signalr/hubs"></script>
         <script>
+
+            var cssSelector ={
+                jPlayer: "#jquery_jplayer_1",
+                cssSelectorAncestor: "#jp_container_1"
+            };
+            var playlist = []; 
+            var options = {
+                swfPath: "../../dist/jplayer",
+                size: {
+                    width: "640px",
+                    height: "360px",
+                    cssClass: "jp-video-360p"
+                },
+                supplied: "webmv, ogv, m4v, oga, mp3",
+                useStateClassSkin: true,
+                autoBlur: false,
+                smoothPlayBar: true,
+                keyEnabled: true,
+                audioFullScreen: true,
+                loop: true,
+                repeat: true,
+                playlistOptions: {
+                    autoPlay: true,
+                }
+            };
+            var myPlaylist = new jPlayerPlaylist(cssSelector, playlist, options);
+
             var shineCount = 0;
             var shine;
 
@@ -42,8 +135,75 @@
                 var self = this;
 
                 self.isUsing = ko.observable('@Model.isUsing' == 'True');
-                self.canibetID = ko.observable(@Model.CurrentCanibetID);
-                self.functionType = ko.observable('@Model.CurrentFunctionType');
+                self.canibetID = ko.observable(@Model.ID);
+                self.functionType = ko.observable('@Model.FunctionType');
+                self.detailType = ko.observable('@Model.DetailType');
+                self.detailPictureList = ko.observableArray([]);
+
+                if (self.detailType() == 'Video') {
+                    GetCanibetDetail(self.canibetID(), 2);
+                }
+                else if (self.detailType() == 'Picture') {
+                    GetCanibetDetail(self.canibetID(), 1);
+
+                   // $("#slideshow > div:gt(0)").hide();
+                    setInterval(function () {
+                        $('#slideshow > div:first')
+                          .fadeOut(1000)
+                          .next()
+                          .fadeIn(1000)
+                          .end()
+                          .appendTo('#slideshow');
+                    }, 5000);
+                }
+                else {
+                    myPlaylist.pause();
+                    
+                }
+
+
+                function GetCanibetDetail(id, detailType) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/Canibet/GetCanibetFile/" + id + "/" + detailType,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (detailType == 0) {
+                                self.detailAnnouncement(data[0].announcement);
+                            }
+                            if (detailType == 1)
+                                self.detailPictureList(data);
+                            else if (detailType == 2) {
+                                for (i = 0; i < data.length; i++) {
+                                    var jsonobj = [];
+                                    jsonobj.push({
+                                        'm4v': '../UploadedFiles/' + id + '/Video/' + data[i].directory + '/' + data[i].fileName,
+                                        'title': data[i].fileName,
+                                        'artist': 'HSR',
+                                    });
+                                    myPlaylist.add(jsonobj[0]);
+                                }
+
+                            }
+                            //  var result = ko.mapping.fromJS(data);
+                            // self.canibet(JSON.parse(data));
+
+                            //  self.canibet(data); //Put the response in ObservableArray
+                        },
+                        error: function (error) {
+                            alert(error.status + "<--and--> " + error.statusText);
+                        }
+                    });
+                }
+
+
+
+                self.GetPicUrl = function (data) {
+                    return '../UploadedFiles/' + data.canibetID + '/Picture/' + data.directory + '/' + data.fileName;
+                };
+                    
+                self.announcement = ko.observable('123');
                 self.isRest = ko.computed(function () {
                     return self.isUsing() == false
                 });
@@ -93,6 +253,10 @@
                 }
             }
 
+            //<![CDATA[
+            $(document).ready(function(){
+            });
+                //]]>
 
         </script>
     

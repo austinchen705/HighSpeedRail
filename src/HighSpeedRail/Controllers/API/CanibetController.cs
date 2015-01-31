@@ -65,7 +65,8 @@ namespace HighSpeedRail.Controllers.API
                 resobj.Add(new CanibetModel()
                 {
                     ID = canibet.ID,
-                    FunctionType = canibet.FunctionType.GetDescription()
+                    FunctionType = canibet.FunctionType.GetDescription(),
+                    DetailType = canibet.DetailType.GetDescription(),
                 });
             }
 

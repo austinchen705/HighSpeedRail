@@ -283,6 +283,10 @@
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="image\jplayer.blue.monday.jpg" />
+    <Content Include="image\jplayer.blue.monday.seeking.gif" />
+    <Content Include="image\jplayer.blue.monday.video.play.png" />
+    <Content Include="Content\jplayer.blue.monday.min.css" />
     <Content Include="Content\loading.gif" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
@@ -310,8 +314,11 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jplayer.playlist.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.jplayer.min.js" />
+    <Content Include="Scripts\jquery.jplayer.swf" />
     <Content Include="Scripts\jquery.signalR-2.1.2.js" />
     <Content Include="Scripts\jquery.signalR-2.1.2.min.js" />
     <Content Include="Scripts\knockout-2.3.0.debug.js" />

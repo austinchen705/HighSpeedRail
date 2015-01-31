@@ -34,15 +34,15 @@ namespace HighSpeedRail.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(int caniBetID, CancellationToken cancelllationToken)
         {
-            var usingCanibet = await _hsrDb.Canibets.SingleOrDefaultAsync(c => c.ID == caniBetID, cancelllationToken);
+            var canibet = await _hsrDb.Canibets.SingleOrDefaultAsync(c => c.ID == caniBetID, cancelllationToken);
             var model = new CanibetIndexModel();
 
-            if (usingCanibet != null)
+            if (canibet != null)
             {
-
                 model.isUsing = true;
-                model.CurrentCanibetID = 0;
-                model.CurrentFunctionType = usingCanibet.FunctionType.GetDescription();
+                model.ID = canibet.ID;
+                model.FunctionType = canibet.FunctionType.GetDescription();
+                model.DetailType = canibet.DetailType;
             }
             else
                 model.isUsing = false;

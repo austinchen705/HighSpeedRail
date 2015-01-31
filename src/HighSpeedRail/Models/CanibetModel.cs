@@ -17,6 +17,8 @@ namespace HighSpeedRail.Models
 
         public bool IsUse { get; set; }
 
+        public string DetailType { get; set; }
+
     }
 
     public class CanibetUpdateModel
@@ -47,8 +49,10 @@ namespace HighSpeedRail.Models
     {
         public bool isUsing { get; set; }
 
-        public string CurrentFunctionType  { get; set; }
+        public string FunctionType  { get; set; }
 
-        public int CurrentCanibetID { get; set; }
+        public long ID { get; set; }
+
+        public DetailTypeEnum DetailType { get; set; }
     }
 }

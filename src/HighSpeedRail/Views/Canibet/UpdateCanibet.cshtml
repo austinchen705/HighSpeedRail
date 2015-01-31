@@ -10,7 +10,78 @@
 @Scripts.Render("~/bundles/modernizr")
 @Styles.Render("~/Content/css")
 
-<div >
+<table style="margin: 20px 15px 20px 15px; width:900px">
+    <tr>
+        <th width="15%">櫃位：
+        </th>
+        <td>
+            <input type="text" id="=ID" data-bind="value: id" disabled="disabled" />
+        </td>
+    </tr>
+    <tr>
+        <th>櫃位類別：</th>
+        <td>
+            <input type="radio" id="funcdtionType1" name="functionType" value="1" data-bind="checked: functionTypeSelectValue" /><label>(1)當日票 /預售票</label>
+            <input type="radio" id="funcdtionType2" name="functionType" value="2" data-bind="checked: functionTypeSelectValue" /><label>(2)孕婦/年長/無障疑專用</label>
+            <input type="radio" id="funcdtionType3" name="functionType" value="3" data-bind="checked: functionTypeSelectValue" /><label>(3)商務車廂 / 升等</label>
+            <input type="radio" id="funcdtionType4" name="functionType" value="4" data-bind="checked: functionTypeSelectValue" /><label>(4)定期票/回數票</label>
+            <input type="radio" id="funcdtionType5" name="functionType" value="5" data-bind="checked: functionTypeSelectValue" /><label>(5)企業客戶</label>
+        </td>
+    </tr>
+    <tr>
+        <th>顯示方式：</th>
+        <td>
+            <input type="radio" id="detailType1" value="0" data-bind="checked: detailTypeSelectValue " /><label>跑馬燈</label>
+            <input type="radio" id="detailType2" value="1" data-bind="checked: detailTypeSelectValue" /><label>圖片</label>
+            <input type="radio" id="detailType3" value="2" data-bind="checked: detailTypeSelectValue" /><label>影片</label>
+        </td>
+    </tr>
+    <tr data-bind="visible: detailTypeSelectValue() === '0'">
+        <td colspan="2" width="100%">
+            <label for="announcement">跑馬燈文字：</label><input type="text" id="announcement" data-bind="value: detailAnnouncement" />
+        </td>
+    </tr>
+    <tr data-bind="visible: detailTypeSelectValue() === '1'">
+        <td colspan="2" width="100%">
+            <input type="file" id="pictureFile" value="瀏覽" accept="image/*" class="btn btn-default" style="display:inline" />
+            <input type="button" id="btnUploadPicture" value="上傳圖片" data-bind="click : UploadPicture" class="btn btn-default"  />
+        </td>
+    </tr>
+    <tr data-bind="visible: detailTypeSelectValue() === '1'">
+        <th>已上傳圖片列表</th>
+        <td>
+            <div data-bind="foreach: detailPictureList">
+                <label data-bind="text: fileName"></label>
+                <input type="button" data-bind="click: $parent.DeleteFile" value="刪除" class="btn btn-default" /><br />
+            </div>
+        </td>
+    </tr>
+    <tr data-bind="visible: detailTypeSelectValue() === '2'">
+        <td colspan="2" width="100%">
+            <input type="file" id="videoFile" value="瀏覽" accept="video/*" style="display:inline" class="btn btn-default" />
+            <input type="button" id="btnUploadPicture" value="上傳影片" data-bind="click : UploadVideo" class="btn btn-default" />
+        </td>
+    </tr>
+    <tr data-bind="visible: detailTypeSelectValue() === '2'">
+        <th>已上傳影片列表</th>
+        <td>
+            <div data-bind="foreach: detailVideoList">
+                <label data-bind="text: fileName"></label>
+                <input type="button" data-bind="click: $parent.DeleteFile" value="刪除" class="btn btn-default" /><br />
+            </div>
+        </td>
+    </tr>
+
+</table>
+
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="button" data-bind="click : UpdateCanibet" class="btn btn-default" value="更新" />
+        <input type="button" onclick="javascript: location.href='../Manage'" class="btn btn-default" value="返回" />
+    </div>
+</div>
+
+@*<div >
     <h2>請選擇</h2>
     <h3>櫃位：</h3>
     <input type="text" id="=ID" data-bind="value: id" disabled="disabled" />
@@ -21,9 +92,7 @@
     <input type="radio" id="funcdtionType4" name="functionType" value="4" data-bind="checked: functionTypeSelectValue" /><label>(4)定期票/回數票</label>
     <input type="radio" id="funcdtionType5" name="functionType" value="5" data-bind="checked: functionTypeSelectValue" /><label>(5)企業客戶</label>
     <h3>顯示方式：</h3>
-    <input type="radio" id="detailType1" value="0" data-bind="checked: detailTypeSelectValue " /><label>跑馬燈</label>
-    <input type="radio" id="detailType2" value="1" data-bind="checked: detailTypeSelectValue" /><label>圖片</label>
-    <input type="radio" id="detailType3" value="2" data-bind="checked: detailTypeSelectValue" /><label>影片</label>
+
 
     <div id="div_announcement" data-bind="visible: detailTypeSelectValue() === '0'">
         <input type="text" id="announcement" data-bind="value: detailAnnouncement" />
@@ -49,7 +118,7 @@
             <input type="button" onclick="javascript: location.href='../Manage'" class="btn btn-default" value="返回" />
         </div>
     </div>
-</div>
+</div>*@
 
 <script>
 
@@ -154,6 +223,7 @@
                 data: data,
                 success: function (data) {
                     GetCanibetDetail(self.id(), 1);
+                    $("#pictureFile").clear();
                 },
                 error: function (error) {
                     alert(error.status + "<--and--> " + error.statusText);
@@ -208,7 +278,7 @@
             if (detailType == '1')
                 GetCanibetDetail(self.id(), 1);
             else if(detailType == '2')
-                GetCanibetDetail(self.id(), 1);
+                GetCanibetDetail(self.id(), 2);
         });
 
     }

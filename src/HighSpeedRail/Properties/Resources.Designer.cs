@@ -70,6 +70,33 @@ namespace HighSpeedRail.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 跑馬燈.
+        /// </summary>
+        internal static string DetailType_Announcement {
+            get {
+                return ResourceManager.GetString("DetailType_Announcement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 圖片.
+        /// </summary>
+        internal static string DetailType_Picture {
+            get {
+                return ResourceManager.GetString("DetailType_Picture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 影片.
+        /// </summary>
+        internal static string DetailType_Video {
+            get {
+                return ResourceManager.GetString("DetailType_Video", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 孕婦/年長/無障疑專用.
         /// </summary>
         internal static string Elderly {

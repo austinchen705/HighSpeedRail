@@ -17,6 +17,7 @@
         <tr>
             <th>櫃位</th>
             <th>目前類別</th>
+            <th>顯示方式</th>
             <th></th>
         </tr>
     </thead>
@@ -24,6 +25,7 @@
         <tr>
             <td data-bind ="text: id"></td>
             <td data-bind="text: functionType"></td>
+            <td data-bind="text: detailType"></td>
             <td><a data-bind="click: $parent.redirectEditPage" style="cursor:pointer">Edit</a></td>
         </tr>
     </tbody>

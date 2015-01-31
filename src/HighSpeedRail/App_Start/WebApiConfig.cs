@@ -13,10 +13,10 @@ namespace HighSpeedRail
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
+            //// Web API configuration and services
             config.Filters.Add(new ApiExceptionAttribute());
             config.Services.Add(typeof(IExceptionLogger), new ApiExceptionLogger());
-            config.MessageHandlers.Add(new ApiMessageHandler());
+           // config.MessageHandlers.Add(new ApiMessageHandler());
             // Configure Web API to use only bearer token authentication.
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));

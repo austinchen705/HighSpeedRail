@@ -120,6 +120,15 @@
   <data name="Bussiness" xml:space="preserve">
     <value>商務車廂 / 升等</value>
   </data>
+  <data name="DetailType_Announcement" xml:space="preserve">
+    <value>跑馬燈</value>
+  </data>
+  <data name="DetailType_Picture" xml:space="preserve">
+    <value>圖片</value>
+  </data>
+  <data name="DetailType_Video" xml:space="preserve">
+    <value>影片</value>
+  </data>
   <data name="Elderly" xml:space="preserve">
     <value>孕婦/年長/無障疑專用</value>
   </data>

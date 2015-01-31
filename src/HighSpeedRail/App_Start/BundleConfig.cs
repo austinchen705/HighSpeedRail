@@ -17,6 +17,7 @@ namespace HighSpeedRail
                 "~/Scripts/jquery.unobtrusive*",
                 "~/Scripts/jquery.validate*"));
 
+
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                 "~/Scripts/knockout-{version}.js",
                 "~/Scripts/knockout.validation.js"));
@@ -40,7 +41,8 @@ namespace HighSpeedRail
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/bootstrap.css",
-                 "~/Content/Site.css"));
+                 "~/Content/Site.css",
+                 "~/COntent/jplayer.blue.monday.min.css"));
 
 
             bundles.Add(new ScriptBundle("~/bundles/signalR").Include(
