@@ -260,6 +260,7 @@
     </Compile>
     <Compile Include="LocalizedDescriptionAttribute .cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CanibetDetailModel.cs" />
     <Compile Include="Models\CanibetModel.cs" />
     <Compile Include="Models\ClientModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />

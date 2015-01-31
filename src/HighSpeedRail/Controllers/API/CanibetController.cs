@@ -93,9 +93,23 @@ namespace HighSpeedRail.Controllers.API
         {
             _hsrDb.Configuration.LazyLoadingEnabled = false;
             var files = await _hsrDb.CanibetDetails.Where(c => c.Type == detailType && c.CanibetID == id).ToListAsync(cancellationToken);
-                
+            List<CanibetDetailModel> resObj = new List<CanibetDetailModel>();
+            foreach (var file in files)
+            {
+                resObj.Add(new CanibetDetailModel()
+                {
+                    CanibetID = file.CanibetID,
+                    CanibetDetailID = file.CanibetDetailID,
+                    Announcement = file.Announcement,
+                    Directory = file.Directory,
+                    FileName = file.FileName,
+                    MediaType = file.MediaType,
+                    Type = file.Type,
+                    Css = resObj.Count == 0 ? "active" : ""
+                });
+            }
 
-            return files;
+            return resObj;
 
         }
 
