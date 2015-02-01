@@ -33,24 +33,6 @@ namespace HighSpeedRail.Controllers.API
 
             base.Dispose(disposing);
         }
-        //[HttpGet]
-        //public CanibetIndexModel GetUsingCanibet()
-        //{
-        //    var dto = _canibetDao.GetUsingCanibet();
-        //    CanibetIndexModel model = new CanibetIndexModel();
-        //    if (dto != null)
-        //    {
-        //        model.isUsing = true;
-        //        model.CurrentCanibetID = dto.ID;
-        //        model.CurrentFunctionType = dto.FunctionType.GetDescription();
-        //    }
-        //    else
-        //    {
-        //        model.isUsing = false;
-        //    }
-
-        //    return model;
-        //}
 
         [HttpGet]
         [HttpPost]
@@ -75,6 +57,7 @@ namespace HighSpeedRail.Controllers.API
         }
 
         [HttpGet]
+        [Route("getCanibet/{id:int}")]
         public async Task<dynamic> GetCanibet(int id, CancellationToken cancellationToken)
         {
             _hsrDb.Configuration.LazyLoadingEnabled = false;
@@ -178,6 +161,7 @@ namespace HighSpeedRail.Controllers.API
         }
 
         [HttpPost]
+        [Route("updateCanibet")]
         public async Task<int> UpdateCanibet(CanibetUpdateModel model, CancellationToken cancelllationToken)
         {
             _hsrDb.Configuration.LazyLoadingEnabled = false;
@@ -218,19 +202,17 @@ namespace HighSpeedRail.Controllers.API
                 scope.Complete();
             }
 
+            var indexModel = new CanibetIndexModel()
+            {
+                ID = canibet.ID,
+                DetailType = canibet.DetailType.ToString(),
+                FunctionType = canibet.FunctionType.GetDescription()
+            };
+            Microsoft.AspNet.SignalR.IHubContext context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<CanibetHub>();
+            context.Clients.All.broadcastMessage(indexModel);
+
             return result;
 
-        }
-
-        [HttpGet]
-        public async Task<HttpResponseMessage> Test()
-        {
-            var canibet = await _hsrDb.Canibets.SingleOrDefaultAsync(c => c.ID == 1);
-
-            return new HttpResponseMessage()
-            {
-                 Content = new StringContent("test")
-            };
         }
     }
 }

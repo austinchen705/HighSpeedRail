@@ -22,7 +22,7 @@
                 </div>
                 <div style="width:500px" data-bind="visible: detailType() === 'Picture'">
                     <div id="slideshow" data-bind="foreach: detailPictureList">
-                        <img width="300px" height="200px" data-bind="attr: { src: '../UploadedFiles/' + canibetID + '/Picture/' + directory + '/' + fileName, class: css}" />
+                        <img width="300px" height="200px" data-bind="attr: { src: '../../UploadedFiles/' + canibetID + '/Picture/' + directory + '/' + fileName, class: css}" />
                     </div>
                 </div>
                 <div style="width:500px" data-bind="visible: detailType() === 'Video'">
@@ -126,7 +126,8 @@
             var myPlaylist = new jPlayerPlaylist(cssSelector, playlist, options);
 
             var shineCount = 0;
-            var shine;
+            var shineInterval;
+            var picutreInterval;
 
             var viewModel = function () {
 
@@ -138,20 +139,20 @@
                 self.detailType = ko.observable('@Model.DetailType');
                 self.detailPictureList = ko.observableArray([]);
                 self.detailAnnouncement = ko.observable('');
-                if (self.detailType() == 'Announcement')
+                if (self.detailType() == 'Announcement') {
                     GetCanibetDetail(self.canibetID(), 0);
+                    myPlaylist.pause();
+                    stopPicSlideShow();
+                }
                 else if (self.detailType() == 'Video') {
                     GetCanibetDetail(self.canibetID(), 2);
+                    stopPicSlideShow();
                 }
                 else if (self.detailType() == 'Picture') {
                     GetCanibetDetail(self.canibetID(), 1);
-
-                }
-                else {
                     myPlaylist.pause();
-                    
+                    startPicSlideShow();
                 }
-
 
                 function GetCanibetDetail(id, detailType) {
                     $.ajax({
@@ -169,13 +170,12 @@
                                 for (i = 0; i < data.length; i++) {
                                     var jsonobj = [];
                                     jsonobj.push({
-                                        'm4v': '../UploadedFiles/' + id + '/Video/' + data[i].directory + '/' + data[i].fileName,
+                                        'm4v': '../../UploadedFiles/' + id + '/Video/' + data[i].directory + '/' + data[i].fileName,
                                         'title': data[i].fileName,
                                         'artist': 'HSR',
                                     });
                                     myPlaylist.add(jsonobj[0]);
                                 }
-
                             }
                             //  var result = ko.mapping.fromJS(data);
                             // self.canibet(JSON.parse(data));
@@ -187,12 +187,6 @@
                         }
                     });
                 }
-
-
-
-                self.GetPicUrl = function (data) {
-                    return '../UploadedFiles/' + data.canibetID + '/Picture/' + data.directory + '/' + data.fileName;
-                };
                     
                 
                 self.isRest = ko.computed(function () {
@@ -203,11 +197,31 @@
                 var canibet = $.connection.canibetHub;
                 // Create a function that the hub can call back to display messages.
                 canibet.client.broadcastMessage = function (result) {
-                    self.canibetID(result.CurrentCanibetID);
-                    self.functionType(result.CurrentFunctionType);
-                    self.isUsing(result.isUsing);
+                    if (result.ID == self.canibetID()) {
+                        self.functionType(result.FunctionType);
+                        self.detailType(result.DetailType);
+                       // self.isUsing(result.isUsing);
 
-                    shine = setInterval(flicker, 1000);
+                        if (self.detailType() == 'Announcement') {
+                            GetCanibetDetail(self.canibetID(), 0);
+                            myPlaylist.pause();
+                            stopPicSlideShow();
+                        }
+                        else if (self.detailType() == 'Video') {
+                            GetCanibetDetail(self.canibetID(), 2);
+                            stopPicSlideShow();
+                            myPlaylist.next();
+                            myPlaylist.play();
+                            
+                        }
+                        else if (self.detailType() == 'Picture') {
+                            GetCanibetDetail(self.canibetID(), 1);
+                            myPlaylist.pause();
+                            startPicSlideShow();
+                        }
+
+                        shineInterval = setInterval(flicker, 1000);
+                    }
                 };
 
                 $.connection.hub.start().done(function () {
@@ -216,11 +230,7 @@
                 });
             };
 
-            $("#body1").keyup(function (event) {
-                if (event.keyCode == 49) {
-                    shine = setInterval(flicker, 1000);
-                }
-            });
+
 
 
             var ClickCounterViewModel = function () {
@@ -241,12 +251,19 @@
 
             ko.applyBindings(new viewModel());
 
+            $("#body1").keyup(function (event) {
+                if (event.keyCode == 49) {
+                    shineInterval = setInterval(flicker, 1000);
+                }
+            });
+
             function flicker() {//閃爍函數
                 $('.shine').fadeOut(500).fadeIn(500);
                 shineCount += 1;
                 while (shineCount >= 10) {
-                    clearInterval(shine);
+                    clearInterval(shineInterval);
                     shineCount = 0;
+                    break;
                 }
             }
 
@@ -270,14 +287,18 @@
 
                 $next.css({ opacity: 0.0 })
                     .addClass('active')
-                    .animate({ opacity: 1.0 }, 1000, function () {
+                    .animate({ opacity: 1.0 }, 5000, function () {
                         $active.removeClass('active last-active');
                     });
             }
 
-            $(function () {
-                setInterval("slideSwitch()", 5000);
-            });
+            function startPicSlideShow() {
+                picutreInterval = setInterval("slideSwitch()", 5000);
+            }
+
+            function stopPicSlideShow() {
+                clearInterval(picutreInterval);
+            }
 
         </script>
     

@@ -53,6 +53,6 @@ namespace HighSpeedRail.Models
 
         public long ID { get; set; }
 
-        public DetailTypeEnum DetailType { get; set; }
+        public string DetailType { get; set; }
     }
 }

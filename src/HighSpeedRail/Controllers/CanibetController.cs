@@ -16,6 +16,7 @@ using System.Web.Mvc;
 
 namespace HighSpeedRail.Controllers
 {
+    [RoutePrefix("Canibet")]
     public class CanibetController : Controller
     {
         private HSRContext _hsrDb = new HSRContext();
@@ -32,9 +33,10 @@ namespace HighSpeedRail.Controllers
         // GET: Canibet
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult> Index(int caniBetID, CancellationToken cancelllationToken)
+        [Route("Index/{id:int}")]
+        public async Task<ActionResult> Index(int id, CancellationToken cancelllationToken)
         {
-            var canibet = await _hsrDb.Canibets.SingleOrDefaultAsync(c => c.ID == caniBetID, cancelllationToken);
+            var canibet = await _hsrDb.Canibets.SingleOrDefaultAsync(c => c.ID == id, cancelllationToken);
             var model = new CanibetIndexModel();
 
             if (canibet != null)
@@ -42,7 +44,7 @@ namespace HighSpeedRail.Controllers
                 model.isUsing = true;
                 model.ID = canibet.ID;
                 model.FunctionType = canibet.FunctionType.GetDescription();
-                model.DetailType = canibet.DetailType;
+                model.DetailType = canibet.DetailType.ToString();
             }
             else
                 model.isUsing = false;
@@ -53,22 +55,6 @@ namespace HighSpeedRail.Controllers
         [Authorize]
         public ActionResult Manage()
         {
-            //if (Session["CanibetID"] != null)
-            //{
-            //    // int canibetID = Session["CanibetID"].ToString().ParseIntOrDefault();
-            //    // var canibet = _canibetDao.GetCanibet(canibetID);
-            //    var f = (FunctionTypeEnum)System.Enum.Parse(typeof(FunctionTypeEnum), Session["FunctionType"].ToString());
-            //    var model = new CanibetCurrentModel()
-            //    {
-            //        SelectedCanibetID = Session["CanibetID"].ToString().ParseIntOrDefault(),
-            //        SelectedFunctionType = f.GetDescription(),
-
-            //    };
-            //    return View(model);
-            //}
-            //else
-            //    return RedirectToAction("UpdateCanibet");
-
             return View();
         }
 
@@ -76,39 +62,8 @@ namespace HighSpeedRail.Controllers
         public async Task<ActionResult> UpdateCanibet(int ID, CancellationToken cancelllationToken)
         {
             var canibet = await _hsrDb.Canibets.SingleAsync(c => c.ID == ID, cancelllationToken);
-            //var model = new CanibetUpdateModel()
-            //{
-            //    CaniBets = canibet
-            //};
-
 
             return View(canibet);
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<ActionResult> UpdateCanibet(Canibet model, CancellationToken cancelllationToken)
-        {
-          //  _canibetDao.UpdateCanibet(model.SelectedCanibetID, (int)model.SelectedFunctionType);
-            //var canibet = await _hsrDb.Canibets.SingleOrDefaultAsync(c => c.ID == model.SelectedCanibetID);
-
-            //if (canibet != null)
-            //{
-            //    canibet.FunctionType = model.SelectedFunctionType;
-            //    await _hsrDb.SaveChangesAsync(cancelllationToken);
-
-            //    CanibetIndexModel indexModel = new CanibetIndexModel()
-            //    {
-            //        isUsing = true,
-            //        CurrentFunctionType = model.SelectedFunctionType.GetDescription(),
-            //        CurrentCanibetID = model.SelectedCanibetID
-            //    };
-            //    Microsoft.AspNet.SignalR.IHubContext context = Microsoft.AspNet.SignalR.GlobalHost.ConnectionManager.GetHubContext<CanibetHub>();
-            //    context.Clients.All.broadcastMessage(indexModel);
-            //}
-
-            //return RedirectToAction("Manage");
-            return null;
         }
     }
 }

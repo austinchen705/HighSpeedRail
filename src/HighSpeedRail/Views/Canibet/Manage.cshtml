@@ -19,6 +19,7 @@
             <th>目前類別</th>
             <th>顯示方式</th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody data-bind="foreach: canibetList">
@@ -26,7 +27,8 @@
             <td data-bind ="text: id"></td>
             <td data-bind="text: functionType"></td>
             <td data-bind="text: detailType"></td>
-            <td><a data-bind="click: $parent.redirectEditPage" style="cursor:pointer">Edit</a></td>
+            <td><a data-bind="click: $parent.redirectEditPage" style="cursor:pointer">編輯</a></td>
+            <td><a data-bind="click: $parent.redirectCanibetPage" style="cursor:pointer" title="開新視窗">櫃位頁</a></td>
         </tr>
     </tbody>
 </table>
@@ -59,6 +61,10 @@
 
         self.redirectEditPage = function(data) {
             location.href = '/Canibet/UpdateCanibet/?ID=' + data.id;
+        }
+
+        self.redirectCanibetPage = function (data) {
+            window.open('/Canibet/Index/' + data.id);
         }
     }
 
